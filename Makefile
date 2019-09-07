@@ -1,7 +1,7 @@
-all: questions_3
+all: ppm_image
 
-questions_3: image_menu.o ppm_menu.o
-		g++ -std=c++11 -o questions_3 image_menu.o ppm_menu.o
+ppm_image: image_menu.o ppm_menu.o PPM.o
+		g++ -std=c++11 -o ppm_image image_menu.o ppm_menu.o PPM.o
 
 image_menu.o : image_menu.cpp image_menu.h
 		g++ -std=c++11 -c image_menu.cpp
@@ -9,12 +9,7 @@ image_menu.o : image_menu.cpp image_menu.h
 ppm_menu.o : ppm_menu.cpp image_menu.h
 		g++ -std=c++11 -c ppm_menu.cpp
 
-clean: -rm -f image_menu.o ppm_menu.o
+PPM.o : PPM.cpp PPM.h
+    g++ -std=c++11 -c PPM.cpp
 
-
-
-
-# g++ -std=c++11 -c image_menu.cpp
-# g++ -std=c++11 -c ppm_menu.cpp
-# g++ -o questions_3 -std=c++11 image_menu.o ppm_menu.o
-
+clean: -rm -f image_menu.o ppm_menu.o PPM.o
