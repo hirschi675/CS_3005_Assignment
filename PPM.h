@@ -26,7 +26,7 @@ class PPM {
         void setMaxColorValue( const int& max_color_value );
         void setChannel( const int& row, const int& column, const int& channel, const int& value );
         void setPixel( const int& row, const int& column, const int& red, const int& green, const int& blue );
-
+        friend ostream& operator<<( std::ostream& os, const PPM& rhs );
 
     private:
         int mHeight;
@@ -34,5 +34,7 @@ class PPM {
         int mMaxColorValue;
         std::vector <int> mVect;
 };
+
+
 
 #endif

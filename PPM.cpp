@@ -4,20 +4,19 @@
 #include <vector>
 using namespace std;
 
-
+// STILL RECIEVES A FAULT ERROR
+// WHERE ARE YOU ACCESSING MEMEORY THAT YOU CAN'T?
 
 PPM::PPM( )
     :mHeight(0), mWidth(0), mMaxColorValue(0) {
     
     this->mVect.resize(mWidth * mHeight * 3);
-    std::cout << "testing" << std::endl;
 }
 
 PPM::PPM( const int& height, const int& width )
     :mHeight(height), mWidth(width), mMaxColorValue(0) {
 
     this->mVect.resize(mWidth * mHeight * 3);
-    std::cout << "testing2" << std::endl;
 }
 
 int PPM::getHeight( ) const {
@@ -34,13 +33,11 @@ int PPM::getMaxColorValue( ) const {
 
 int PPM::getChannel( const int& row, const int& column, const int& channel ) const {
     if (channel >= 0 && channel <= 2 && row >= 0 && row < mHeight && column >= 0 && column < mWidth) {
-        // return (row) * (this->mWidth * 3) + (column) * 3 + channel;
-        // std::cout << row << " " << column << " " << channel << std::endl;
         int i = index(row, column, channel);
         return this->mVect[i];
     }
     else {
-        // std::cout << row + column + channel << endl;
+        std::cout << "Wrong" << endl;
         return -1;
     }
 }
@@ -48,30 +45,23 @@ int PPM::getChannel( const int& row, const int& column, const int& channel ) con
 
 
 bool PPM::indexValid( const int& row, const int& column, const int& channel ) const {
-    // std::cout << mHeight << " H/W " << mWidth << std::endl;
-    // row = 3 column = 4 channel = 1
-    std::cout << row << " row " << column << " column " << channel << " channel" << std::endl;
-    std::cout << this->mHeight << std::endl;
 
     if ((channel >= 0 && channel <= 2) && (row >= 0 && row < this->mHeight) && (column >= 0 && column < this->mWidth)) {
         return true;
     }
     else {
-        // std::cout << row << " " << column << " " << channel << std::endl;
-        // std::cout << mHeight << " H/W " << mWidth << std::endl;
         return false;
     }
 
 }
 
 int PPM::index( const int& row, const int& column, const int& channel ) const {
-    int in = ((row * this->mWidth + column) * 3 + channel);
+    int in = ((row * this->mWidth * 3 + column * 3) + channel);
     return in;
 }
 
 bool PPM::valueValid( const int& value ) const {
     if(value >= 0 && value <= this->mMaxColorValue){
-        // std::cout << value << endl;
         return true;
     }
     else {
@@ -104,16 +94,12 @@ void PPM::setMaxColorValue( const int& max_color_value ) {
 }
 
 void PPM::setChannel( const int& row, const int& column, const int& channel, const int& value ) {
-    std::cout << "Size of vector " << this->mVect.size() << std::endl;
     if(indexValid(row, column, channel)) {
-        // std::cout << "value " << valueValid(value) << std::endl;
         if(valueValid(value)) {
-            std::cout << "does it set channel?" << std::endl;
             int i = index(row, column, channel);
             this->mVect[i] = value;
         }
     }
-    std::cout << "does it exit set channel?" << std::endl;
     return;
 }
 
@@ -124,6 +110,18 @@ void PPM::setPixel( const int& row, const int& column, const int& red, const int
     return;
 }
 
-// std::ostream& operator<<( std::ostream& os, const PPM& rhs ) {
-// return os;
-// }
+
+std::ostream& operator<<( std::ostream& os, const PPM& rhs ) {
+    unsigned char b;
+    os << "P6 " << rhs.getWidth() << " " << rhs.getHeight() << " " << rhs.getMaxColorValue() <<  std::endl;
+     for (int i = 0 ; i < rhs.getHeight( ) ; i++ ) {
+      for (int j = 0 ; j < rhs.getWidth( ) ; j++ ) {
+        for (int c = 0 ; c < 3 ; c++ ) {
+            int value = rhs.getChannel(i, j ,c);
+            b = (unsigned char)value;
+            os.write((char*) &b, 1);
+        }
+      }
+     }
+    return os;
+}
